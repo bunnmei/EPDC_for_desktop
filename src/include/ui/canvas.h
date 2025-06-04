@@ -1,0 +1,20 @@
+#pragma once
+
+#include <gtk/gtk.h>
+#include "object_common.h"
+
+#define CANVAS_WIDTH 888
+#define CANVAS_HEIGHT 384
+
+typedef struct 
+{
+  EPDC_App_Obj *app_obj;
+  GtkWidget *mask;
+  GtkWidget *pop_up_box;
+} PopUp;
+
+GtkWidget *create_canvas(GtkWidget *box, EPDC_App_Obj *app_obj);
+GtkWidget *create_canvas_layer(EPDC_App_Obj *app_obj);
+GtkWidget *create_operate_btns_layer(PopUp *pop_up);
+GtkWidget *create_mask_layer(PopUp *pop_up);
+GtkWidget *create_pop_up_layer(PopUp *pop_up);

@@ -1,0 +1,135 @@
+
+window {
+  margin: 0;
+  padding: 0;
+}
+/* header.c */
+headerbar {
+  padding: 0;
+}
+
+headerbar box {
+  border: none; 
+  padding: 0;
+  margin: 0;
+  background-color: #b3c7f7;
+  border: none;
+  border-spacing: 0;
+}
+
+.titlebar {
+  border: none;
+}
+
+.horizontal {
+  min-height: 20px;
+}
+
+.header-bar-button{
+  animation: none;
+  background-image: none;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  border-radius: 0px;
+  font-size: 24px;
+}
+
+.close-button:hover {
+  background-color: #ff6347;
+}
+
+.window-min-button:hover {
+  background-color: #d9e4ff;
+}
+
+.expand-button:hover {
+  background-color: #d9e4ff;
+} 
+
+
+/* main_content.c  */
+.left-box {
+  background-color: rgb(252, 255, 177);
+  border: none;
+  padding: 0px;
+}
+
+.horizontal {
+  border: 0px;
+  border-image-width: 0px;
+  border: none;
+}
+
+.right-box {
+  /* background-color: rgb(214, 255, 177); */
+  border-image-width: 0;
+  margin: 0;
+  border: none;
+}
+
+/* canvas.c  */
+
+.add-button {
+  background-image: none;
+
+  background-color: #b3c7f7;
+  /* background-color: #5474c5; */
+  padding: 0;
+  margin: 0;
+  border: none;
+  margin: 16px 16px 0px 0px;
+  border-radius: 50%;
+  min-width: 50px;
+  min-height: 50px;
+  outline-offset: 0;
+}
+
+.add-button:hover {
+  background-color: #d9e4ff;
+}
+
+.mask {
+  background-color: rgba(85, 86, 89, 0.4);
+}
+
+.add-obj-list-box {
+  background-color: #ffffff;
+}
+
+
+/* tab_ui.c  */
+tabs {
+  margin: 0;
+  padding: 0;
+  min-height: 40px;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+tab {
+  padding: 0;
+  margin: 0;
+  background-color: #b3c7f7;
+  border: none;
+  box-shadow: none;
+}
+notebook {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+notebook > header{
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    /* background-color: #3e434f; */
+}
+
+notebook > header tabs tab:checked {
+  background-color: #d9e4ff;
+}
