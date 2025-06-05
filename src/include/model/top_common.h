@@ -1,9 +1,12 @@
 #pragma once
 
+#include <gtk/gtk.h>
+#include <glib-object.h>
+
 typedef enum 
 {
-  BLACK,
-  RED,
+  BLACK = 0,
+  RED = 1,
 } ColorMode;
 
 typedef enum

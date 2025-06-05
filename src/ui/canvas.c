@@ -1,62 +1,7 @@
 #include "canvas.h"
 #include "text_object.h"
-
-static void
-draw_function(GtkDrawingArea *drawing_area,
-              cairo_t *cr,
-              int width,
-              int height,
-              gpointer user_data)
-{
-  EPDC_App_Obj *app_obj = (EPDC_App_Obj *)user_data;
-  cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-  cairo_paint(cr);
-
-  for (guint i = 0; i < app_obj->text_objs->len ; i++) {
-    TextObject *text_obj = (TextObject *)g_ptr_array_index(app_obj->text_objs, i);
-    g_print("canvas rand = %s\n", text_obj->uuid
-    );
-    if(text_obj->color == BLACK) {
-      cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-    } else if(text_obj->color == RED) {
-      cairo_set_source_rgb(cr, 1.0, 0.0, 0.0);
-    }
-    cairo_move_to(cr, text_obj->x, text_obj->y);
-    cairo_set_font_size(cr, text_obj->font_size);
-    cairo_show_text(cr, text_obj->text);
-  }
-  
-}
-
-static void on_add_btn_clicked(GtkButton *button, gpointer user_data) {
-  PopUp *pop_up = (PopUp *)user_data;
-  gtk_widget_set_visible(pop_up->mask, TRUE);
-  gtk_widget_set_visible(pop_up->pop_up_box, TRUE);
-}
-
-static void on_add_text(GtkButton *button, gpointer user_data) {
-  PopUp *pop_up = (PopUp *)user_data;
-  gtk_widget_set_visible(pop_up->mask, FALSE);
-  gtk_widget_set_visible(pop_up->pop_up_box, FALSE);
-  TextObject *new_obj = text_object_new("dammy", g_uuid_string_random(), 50.0, 150.0, 100.0, BLACK);
-  pop_up->app_obj->obj_mode = TEXT;
-  pop_up->app_obj->obj_text = new_obj;
-  gtk_stack_set_visible_child_name(GTK_STACK(pop_up->app_obj->stack), "text");
-  g_ptr_array_add(pop_up->app_obj->text_objs, new_obj);
-  gtk_widget_queue_draw(pop_up->app_obj->ope_draw_area);
-}
-
-static void on_mask_clicked(
-  GtkGestureClick *gesture,
-  int n_press,
-  double x,
-  double y,
-  gpointer user_data) {
-
-  PopUp *pop_up = (PopUp *)user_data;
-  gtk_widget_set_visible(pop_up->mask, FALSE);
-  gtk_widget_set_visible(pop_up->pop_up_box, FALSE);
-}
+#include "draw_canvas.h"
+#include "add_obj.h"
 
 GtkWidget *create_canvas(GtkWidget *box, EPDC_App_Obj *app_obj){
   PopUp *pop_up = g_new0(PopUp, 1);

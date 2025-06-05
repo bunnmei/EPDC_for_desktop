@@ -10,12 +10,17 @@ sourcefiles=files(
   'src/ui/canvas.c',
   'src/ui/tab_ui.c',
   'src/ui/ope_prop.c',
+  'src/ui/obj_list.c',
+
+  'src/controller/add_obj.c',
+  'src/controller/draw_canvas.c',
+  'src/controller/change_prop.c',
 
   'src/model/text_object.c',
   'src/model/object_common.c'
   )
 
-include_dir= include_directories('src/include/ui', 'src/include/model')
+include_dir= include_directories('src/include/ui', 'src/include/model', 'src/include/controller')
 
 executable(
   'EPDC',

@@ -11,6 +11,8 @@ typedef struct
   GtkWidget *stack;
   ObjMode obj_mode;
   TextObject *obj_text;
+  TextLabels *text_labels;
+  GListStore *text_store;
 } EPDC_App_Obj;
 
 EPDC_App_Obj *app_obj_init();

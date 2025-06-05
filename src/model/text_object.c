@@ -3,6 +3,20 @@
 
 #include "text_object.h"
 
+GType color_mode_get_type(void) {
+  static GType type = 0;
+  static const GEnumValue values[] = {
+      { BLACK, "BLACK", "black" },
+      { RED, "RED", "red" },
+      { 0, NULL, NULL }
+  };
+
+  if (type == 0) {
+      type = g_enum_register_static("ColorMode", values);
+  }
+  return type;
+}
+
 enum {
   PROP_0,
   PROP_UUID,
@@ -65,12 +79,7 @@ static void text_object_class_init(TextObjectClass *klass) {
   obj_properties[PROP_X] = g_param_spec_double("x", "X", "X Coordinate", -G_MAXDOUBLE, G_MAXDOUBLE, 0, G_PARAM_READWRITE);
   obj_properties[PROP_Y] = g_param_spec_double("y", "Y", "Y Coordinate", -G_MAXDOUBLE, G_MAXDOUBLE, 0, G_PARAM_READWRITE);
   obj_properties[PROP_FONT_SIZE] = g_param_spec_double("font-size", "Font Size", "Font Size", 1, 200, 12, G_PARAM_READWRITE);
-  obj_properties[PROP_COLOR] = g_param_spec_enum("color", "Color", "Color Mode", 
-    g_enum_register_static("ColorMode", (GEnumValue[]) {
-      { BLACK, "BLACK", "black" },
-      { RED,   "RED",   "red" },
-      { 0, NULL, NULL }
-    }), BLACK,  G_PARAM_READWRITE
+  obj_properties[PROP_COLOR] = g_param_spec_enum("color", "Color", "Color Mode", color_mode_get_type(), RED,  G_PARAM_READWRITE
   );
 
   g_object_class_install_properties(object_class, N_PROPERTIES, obj_properties);

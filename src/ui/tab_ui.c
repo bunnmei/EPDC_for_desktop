@@ -1,6 +1,7 @@
 #include "tab_ui.h"
 #include "text_object.h"
 #include "ope_prop.h"
+#include "obj_list.h"
 
 GtkWidget *create_tab_ui(GtkWidget *box, EPDC_App_Obj *app_obj) {
   GtkWidget *note_book = gtk_notebook_new();
@@ -19,7 +20,7 @@ GtkWidget *create_tab_ui(GtkWidget *box, EPDC_App_Obj *app_obj) {
   
   page1_content = create_prop_stack(app_obj);
   app_obj->stack = page1_content;
-  page2_content = gtk_label_new("ここにはタブ2のコンテンツが入ります。");
+  page2_content = create_obj_list_box(app_obj);
   page3_content = gtk_label_new("ここにはタブ3のコンテンツが入ります。");
   gtk_notebook_append_page(GTK_NOTEBOOK(note_book), page1_content, label1);
   gtk_notebook_append_page(GTK_NOTEBOOK(note_book), page2_content, label2);
