@@ -8,16 +8,18 @@ GtkWidget *create_canvas(GtkWidget *box, EPDC_App_Obj *app_obj){
   pop_up->mask = NULL;
   pop_up->pop_up_box = NULL;
   pop_up->app_obj = app_obj;
+  pop_up->pixels = g_ptr_array_new_with_free_func(g_free);
 
   GtkWidget *overlay = gtk_overlay_new();
   gtk_widget_set_hexpand(overlay, TRUE);
   gtk_widget_set_vexpand(overlay, TRUE);
   gtk_box_append(GTK_BOX(box), overlay);
 
-  GtkWidget *canvas_layer = create_canvas_layer(app_obj);
+  GtkWidget *canvas_layer = create_canvas_layer(pop_up);
   GtkWidget *mask_layer = create_mask_layer(pop_up);
   GtkWidget *pop_up_layer = create_pop_up_layer(pop_up);
   GtkWidget *btn_layer = create_operate_btns_layer(pop_up);
+
   gtk_overlay_set_child(GTK_OVERLAY(overlay), canvas_layer);
   gtk_overlay_add_overlay(GTK_OVERLAY(overlay), btn_layer);
   gtk_overlay_add_overlay(GTK_OVERLAY(overlay), mask_layer);
@@ -26,7 +28,7 @@ GtkWidget *create_canvas(GtkWidget *box, EPDC_App_Obj *app_obj){
   return overlay;
 }
 
-GtkWidget *create_canvas_layer(EPDC_App_Obj *app_obj) {
+GtkWidget *create_canvas_layer(PopUp *pop_up) {
   GtkWidget *canvas_layer_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
   gtk_widget_add_css_class(canvas_layer_box, "canvas-layer");
   gtk_widget_set_halign(canvas_layer_box, GTK_ALIGN_CENTER);
@@ -35,23 +37,23 @@ GtkWidget *create_canvas_layer(EPDC_App_Obj *app_obj) {
   gtk_widget_set_vexpand(canvas_layer_box, TRUE);
 
   GtkWidget *operate_drawing_area = gtk_drawing_area_new();
-  app_obj->ope_draw_area = operate_drawing_area;
+  pop_up->app_obj->ope_draw_area = operate_drawing_area;
   gtk_widget_set_size_request(operate_drawing_area, CANVAS_WIDTH, CANVAS_HEIGHT);
   gtk_drawing_area_set_draw_func(
     GTK_DRAWING_AREA(operate_drawing_area),
     draw_function,
-    app_obj, 
+    pop_up->app_obj, 
     NULL
   );
   gtk_box_append(GTK_BOX(canvas_layer_box), operate_drawing_area);
 
   GtkWidget *preview_drawing_area = gtk_drawing_area_new();
-  app_obj->ope_draw_area = preview_drawing_area;
+  pop_up->app_obj->preview_draw_area = preview_drawing_area;
   gtk_widget_set_size_request(preview_drawing_area, CANVAS_WIDTH, CANVAS_HEIGHT);
   gtk_drawing_area_set_draw_func(
     GTK_DRAWING_AREA(preview_drawing_area),
-    draw_function,
-    app_obj, 
+    draw_preview_function,
+    pop_up, 
     NULL
   );
   gtk_box_append(GTK_BOX(canvas_layer_box), preview_drawing_area);
@@ -72,9 +74,21 @@ GtkWidget *create_operate_btns_layer(PopUp *pop_up) {
   gtk_widget_set_size_request(image_add, 24, 24);
   gtk_widget_set_valign(image_add, GTK_ALIGN_CENTER);
   gtk_button_set_child(GTK_BUTTON(add_obj_btn), image_add);
+
+  GtkWidget *scan_canvas_btn = gtk_button_new();
+  gtk_widget_set_margin_start(scan_canvas_btn, 4);
+  gtk_widget_add_css_class(scan_canvas_btn, "add-button");
+  gtk_widget_set_size_request(scan_canvas_btn, 50, 50);
+
+  GtkWidget *image_scan_canvas = gtk_image_new_from_file("src/icons/scan.svg");
+  gtk_widget_set_size_request(image_scan_canvas, 24, 24);
+  gtk_widget_set_valign(image_scan_canvas, GTK_ALIGN_CENTER);
+  gtk_button_set_child(GTK_BUTTON(scan_canvas_btn), image_scan_canvas);
   
   gtk_box_append(GTK_BOX(operate_btns_layer_box), add_obj_btn);
+  gtk_box_append(GTK_BOX(operate_btns_layer_box), scan_canvas_btn);
   g_signal_connect(add_obj_btn, "clicked", G_CALLBACK(on_add_btn_clicked), pop_up);
+  g_signal_connect(scan_canvas_btn, "clicked", G_CALLBACK(on_scan_canvas), pop_up);
 
   return operate_btns_layer_box;
 }

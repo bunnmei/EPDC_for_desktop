@@ -11,10 +11,11 @@ typedef struct
   EPDC_App_Obj *app_obj;
   GtkWidget *mask;
   GtkWidget *pop_up_box;
+  GPtrArray *pixels;
 } PopUp;
 
 GtkWidget *create_canvas(GtkWidget *box, EPDC_App_Obj *app_obj);
-GtkWidget *create_canvas_layer(EPDC_App_Obj *app_obj);
+GtkWidget *create_canvas_layer(PopUp *pop_up);
 GtkWidget *create_operate_btns_layer(PopUp *pop_up);
 GtkWidget *create_mask_layer(PopUp *pop_up);
 GtkWidget *create_pop_up_layer(PopUp *pop_up);

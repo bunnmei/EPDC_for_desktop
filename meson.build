@@ -15,6 +15,7 @@ sourcefiles=files(
   'src/controller/add_obj.c',
   'src/controller/draw_canvas.c',
   'src/controller/change_prop.c',
+  'src/controller/label_bind.c',
 
   'src/model/text_object.c',
   'src/model/object_common.c'
