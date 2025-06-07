@@ -3,4 +3,4 @@
 #include <gtk/gtk.h>
 #include "object_common.h"
 
-GtkWidget *create_tab_ui(GtkWidget *box,  PopUp *pop_up);
+GtkWidget *cretate_usb_controller_box(PopUp *pop_up);

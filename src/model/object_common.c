@@ -23,3 +23,15 @@ EPDC_App_Obj *app_obj_init() {
   app_obj->text_labels = text_labels;
   return app_obj;
 }
+
+PopUp *pop_up_init(EPDC_App_Obj *app_obj) {
+  PopUp *pop_up = g_new0(PopUp, 1);
+  pop_up->mask = NULL;
+  pop_up->pop_up_box = NULL;
+  pop_up->app_obj = app_obj;
+  pop_up->pixels = g_ptr_array_new_with_free_func(g_free);
+  pop_up->usb_thread = NULL;
+  pop_up->keep_running = false;
+  pop_up->thread_mutex = NULL;
+  return pop_up;
+}

@@ -10,6 +10,7 @@
 
 static void app_activate(GApplication *app){
   EPDC_App_Obj *app_obj = app_obj_init();
+  PopUp *pop_up = pop_up_init(app_obj);
   setup_css(); // cssの読み込み.
 
   GtkWidget *win = gtk_application_window_new(GTK_APPLICATION (app));
@@ -21,8 +22,8 @@ static void app_activate(GApplication *app){
   GtkWidget *left_box = create_content_left_box(main_box);
   GtkWidget *right_box = create_content_right_box(main_box);
 
-  create_canvas(left_box, app_obj);
-  create_tab_ui(right_box, app_obj);
+  create_canvas(left_box, pop_up);
+  create_tab_ui(right_box, pop_up);
 
   gtk_window_present(GTK_WINDOW(win));
 }
