@@ -21,7 +21,8 @@ sourcefiles=files(
   'src/controller/usb_emit.c',
 
   'src/model/text_object.c',
-  'src/model/object_common.c'
+  'src/model/object_common.c',
+  'src/model/usb_emit_test_data.c'
   )
 
 include_dir= include_directories('src/include/ui', 'src/include/model', 'src/include/controller')
