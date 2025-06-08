@@ -1,6 +1,6 @@
 #include "usb_emit.h"
 #include "object_common.h"
-
+#include "canvas.h"
 
 #define VENDOR_ID 0x0000
 #define PRODUCT_ID 0x0001
@@ -121,6 +121,65 @@
 //     libusb_exit(ctx);
 // }
 
+static unsigned int emit_array_cretate(GPtrArray *pixels, unsigned char *emit_arr) {
+  int size_w = CANVAS_WIDTH / 3;
+  int size_h = CANVAS_HEIGHT / 3;
+  int count = 0;
+  int index = 0;
+  unsigned char byte = 0;
+  printf("max len %d\n", pixels->len);
+  for (int w = 0; w < size_w; w++)
+  {
+    for (int h = 0; h < size_h; h++){
+      int i = h * size_w + w;
+      int *pixel = (int *)g_ptr_array_index(pixels, i);
+      byte |= (*pixel << (7 - count));
+      count++;
+      if(count >= 8) {
+        printf("byte %d\n", byte);
+        emit_arr[index] = ~byte;
+        index++;
+        byte = 0;
+        count = 0;
+      }
+    }
+  }
+
+  // g_print("index %d\n", emit_arr[index-1]);
+  // g_print("index %d\n", index);
+  // for (int i = 0; i < pixels->len; i++) {
+  //   unsigned char byte = 0;
+  //   int *pixel = (int *)g_ptr_array_index(pixels, i);
+  //   byte |= (*pixel << i);
+  //   int p = size
+  // }
+  // for (int w = 0; w < size_w; w++){
+  //   unsigned char byte = 0;
+  //   for (int h = 0; h < size_h; h++){
+
+  //       for (int i = 0; i < 8; i++) {
+
+  //         int *pixel = (int *)g_ptr_array_index(pixels, count);
+  //         byte |= (*pixel << i);
+  //         count++;
+  //       }
+  //       // emit_arr[h*size_w + w] = ~byte;
+  //       g_print("index %d\n",(w*size_h));
+  //   }
+  // }
+
+  return count;
+  // for (unsigned int i = 0; i < pixels->len; i += 8)
+  // {
+  //   unsigned char byte = 0;
+  //   for (int j = 0; j < 8; ++j)
+  //   {
+  //     int *pixel = (int *)g_ptr_array_index(pixels, i + j);
+  //     byte |= (*pixel << j); // 下位から上位へ
+  //   }
+  //   emit_arr[emit_arr_idx++] = byte;
+  // }
+}
 
 static gpointer usb_emit_thread(gpointer data) {
   PopUp *pop_up = (PopUp *)data;
@@ -128,9 +187,16 @@ static gpointer usb_emit_thread(gpointer data) {
   libusb_context *ctx = NULL;
   libusb_device_handle *handle;
   struct libusb_device_descriptor desc;
+  unsigned char emit_arr[4736] = {0};
+  unsigned int emit_len = emit_array_cretate(pop_up->pixels, emit_arr);
   unsigned char text[512];
   int r, i;
   int actual_length;
+
+  // libusb_close(handle);
+  // libusb_free_device_list(list, 1);
+  // libusb_exit(ctx);
+  // goto end;
 
   r = libusb_init(NULL);
   if (r < 0) {
@@ -162,7 +228,7 @@ static gpointer usb_emit_thread(gpointer data) {
     libusb_close(handle);
     libusb_free_device_list(list, 1);
     libusb_exit(ctx);
-    return 0;
+    goto end;
   }
 
   struct libusb_config_descriptor *config;
@@ -199,16 +265,16 @@ static gpointer usb_emit_thread(gpointer data) {
       printf("Bulk OUT endpoint: 0x%02x\n", ep_bulk_out);
       int toggle = 1;
       unsigned int offset = 0;
-      while(offset < sizeof(gImage1_BW)){
+      while(offset < sizeof(emit_arr)){
         int bytes_to_send = 64;
-        if (offset + 64 > sizeof(gImage1_BW))
+        if (offset + 64 > sizeof(emit_arr))
         {
-          bytes_to_send = sizeof(gImage1_BW) - offset;
+          bytes_to_send = sizeof(emit_arr) - offset;
         }
         r = libusb_bulk_transfer(
           handle,
           ep_bulk_out,
-          (unsigned char *)&gImage1_BW[offset],
+          (unsigned char *)&emit_arr[offset],
           bytes_to_send,
           &actual_length,
           1000);
@@ -216,7 +282,7 @@ static gpointer usb_emit_thread(gpointer data) {
         if (r < 0) {
           fprintf(stderr, "Error sending: %s\n", libusb_error_name(r));
         } else {
-          printf("Sent %d bytes (total: %d/%zu)\n", actual_length, offset + actual_length, sizeof(gImage1_BW));
+          printf("Sent %d bytes (total: %d/%zu)\n", actual_length, offset + actual_length, sizeof(emit_arr));
           offset += actual_length;
         }
       }
@@ -226,11 +292,15 @@ static gpointer usb_emit_thread(gpointer data) {
       libusb_close(handle);
       libusb_free_device_list(list, 1);
       libusb_exit(ctx);
+      goto end;
     }
+
+  end:
 }
 bool usb_emit(GPtrArray *array, PopUp *pop_up){
   printf("usb_emit\n");
-  pop_up->usb_thread = g_thread_new("usb_thread", usb_emit_thread, pop_up);
+  usb_emit_thread(pop_up);
+  // pop_up->usb_thread = g_thread_new("usb_thread", usb_emit_thread, pop_up);
   return true;
 }
 // if(pop_up->keep_running) {

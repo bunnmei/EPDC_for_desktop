@@ -40,16 +40,18 @@ draw_preview_function(GtkDrawingArea *drawing_area,
   cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
   cairo_paint(cr);
 
-  for (guint i = 0; i < pop_up->pixels->len; i++) {
+  // g_print("array length %d\n", pop_up->pixels->len);
+  for (guint i = 0; i < pop_up->pixels->len; i++)
+  {
     int *pixel = (int *)g_ptr_array_index(pop_up->pixels, i);
-    int x = i % (CANVAS_WIDTH/ 2); // 2倍の幅で計算
-    int y = i / (CANVAS_WIDTH / 2); // 2倍の幅で計算
+    int x = i % (CANVAS_WIDTH / 3); // 2倍の幅で計算
+    int y = i / (CANVAS_WIDTH / 3); // 2倍の幅で計算
     if (*pixel == 1) {
       cairo_set_source_rgb(cr, 0.0, 0.0, 0.0); 
     } else {
       cairo_set_source_rgb(cr, 1.0, 1.0, 1.0); 
     }
-    cairo_rectangle(cr,  x * 2,  y * 2, 2, 2); // 各ピクセルを2x2の正方形として描画
+    cairo_rectangle(cr,  (x * 3),  (y * 3), 3, 3); // 各ピクセルを2x2の正方形として描画
     cairo_fill(cr);
   }
 }

@@ -29,21 +29,22 @@ void on_scan_canvas(GtkButton *button, gpointer user_data){
   guchar *pixels = gdk_pixbuf_get_pixels(pixbuf);
   long int pixels_length = gdk_pixbuf_get_n_channels(pixbuf) * gdk_pixbuf_get_width(pixbuf) * gdk_pixbuf_get_height(pixbuf);
 
-  int size_w = (CANVAS_WIDTH / 2);
-  int size_h = (CANVAS_WIDTH / 2);
+  int size_w = (CANVAS_WIDTH / 3);
+  int size_h = (CANVAS_HEIGHT / 3);
   int block = 2;
   int buf[size_w * size_h];
   int c = 0;
   pop_up->pixels = g_ptr_array_new_with_free_func(g_free);
+  g_print("w = %d, h = %d\n", size_w, size_h);
   GPtrArray *px = pop_up->pixels;
   for (int y = 0; y < size_h; y++)
   {
     for (int x = 0; x < size_w; x++) {
       int count = 0;
-      int i = (y * 2) * (size_w * 2) + (x * 2);
-      int i2 = (y * 2) * (size_w * 2) + (x * 2) + 1;
-      int i3 = (y * 2) * (size_w * 2) + (x * 2) + (size_w * 2);
-      int i4 = (y * 2) * (size_w * 2) + (x * 2) + (size_w * 2) + 1;
+      int i = (y * 3) * (size_w * 3) + (x * 3);
+      int i2 = (y * 3) * (size_w * 3) + (x * 3) + 1;
+      int i3 = (y * 3) * (size_w * 3) + (x * 3) + (size_w * 3);
+      int i4 = (y * 3) * (size_w * 3) + (x * 3) + (size_w * 3) + 1;
       // printf("i: %d, i2: %d, i3: %d, i4: %d\n", i, i2, i3, i4);
       if(pixels[i*4] > 128) {
         count++;
