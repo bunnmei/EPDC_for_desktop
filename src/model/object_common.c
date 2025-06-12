@@ -13,6 +13,7 @@ EPDC_App_Obj *app_obj_init() {
   app_obj->obj_mode = NONE;
   app_obj->obj_text = NULL;
   app_obj->text_store = NULL;
+  app_obj->text_selection = NULL;
 
   TextLabels *text_labels = g_new0(TextLabels, 1);
   text_labels->x = NULL;
@@ -30,6 +31,7 @@ PopUp *pop_up_init(EPDC_App_Obj *app_obj) {
   pop_up->pop_up_box = NULL;
   pop_up->app_obj = app_obj;
   pop_up->pixels = g_ptr_array_new_with_free_func(g_free);
+  pop_up->pixels_red = g_ptr_array_new_with_free_func(g_free);
   pop_up->usb_thread = NULL;
   pop_up->keep_running = false;
   pop_up->thread_mutex = NULL;

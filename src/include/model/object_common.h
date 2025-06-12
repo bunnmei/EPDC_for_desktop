@@ -13,6 +13,7 @@ typedef struct
   TextObject *obj_text;
   TextLabels *text_labels;
   GListStore *text_store;
+  GtkSingleSelection *text_selection;
 } EPDC_App_Obj;
 
 typedef struct 
@@ -21,6 +22,7 @@ typedef struct
   GtkWidget *mask;
   GtkWidget *pop_up_box;
   GPtrArray *pixels;
+  GPtrArray *pixels_red;
   GThread *usb_thread;
   GMutex *thread_mutex;
   bool keep_running;

@@ -1,5 +1,3 @@
-
-
 #include "obj_list.h"
 
 void on_button_clicked(GtkButton *button, gpointer user_data)
@@ -83,11 +81,11 @@ GtkWidget *create_obj_list_box(EPDC_App_Obj *app_obj){
 
   GtkSingleSelection *selection = gtk_single_selection_new(G_LIST_MODEL(store));
   g_signal_connect(selection, "notify::selected", G_CALLBACK(on_item_selected), NULL);
+  app_obj->text_selection = selection;
 
   GtkListItemFactory *factory = gtk_signal_list_item_factory_new();
   g_signal_connect(factory, "setup", G_CALLBACK(setup_list_item), app_obj);
   g_signal_connect(factory, "bind", G_CALLBACK(bind_list_item), NULL);
-
 
   GtkWidget *scrolled_window = gtk_scrolled_window_new();
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);

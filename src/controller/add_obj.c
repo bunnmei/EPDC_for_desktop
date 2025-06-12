@@ -32,47 +32,85 @@ void on_scan_canvas(GtkButton *button, gpointer user_data){
   int size_w = (CANVAS_WIDTH / 3);
   int size_h = (CANVAS_HEIGHT / 3);
   int block = 2;
-  int buf[size_w * size_h];
+  // int buf[size_w * size_h];
   int c = 0;
   pop_up->pixels = g_ptr_array_new_with_free_func(g_free);
-  g_print("w = %d, h = %d\n", size_w, size_h);
+  pop_up->pixels_red = g_ptr_array_new_with_free_func(g_free);
+
   GPtrArray *px = pop_up->pixels;
+  GPtrArray *px_red = pop_up->pixels_red;
   for (int y = 0; y < size_h; y++)
   {
     for (int x = 0; x < size_w; x++) {
       int count = 0;
-      int i = (y * 3) * (size_w * 3) + (x * 3);
+      int count_red = 0;
+      int i1 = (y * 3) * (size_w * 3) + (x * 3);
       int i2 = (y * 3) * (size_w * 3) + (x * 3) + 1;
       int i3 = (y * 3) * (size_w * 3) + (x * 3) + (size_w * 3);
       int i4 = (y * 3) * (size_w * 3) + (x * 3) + (size_w * 3) + 1;
-      // printf("i: %d, i2: %d, i3: %d, i4: %d\n", i, i2, i3, i4);
-      if(pixels[i*4] > 128) {
+      int px1_r = pixels[i1 * 4];
+      int px1_g = pixels[i1 * 4 + 1];
+      int px1_b = pixels[i1 * 4 + 2];
+      
+      int px2_r = pixels[i2 * 4];
+      int px2_g = pixels[i2 * 4 + 1];
+      int px2_b = pixels[i2 * 4 + 2];
+
+      int px3_r = pixels[i3 * 4];
+      int px3_g = pixels[i3 * 4 + 1];
+      int px3_b = pixels[i3 * 4 + 2];
+
+      int px4_r = pixels[i4 * 4];
+      int px4_g = pixels[i4 * 4 + 1];
+      int px4_b = pixels[i4 * 4 + 2];
+
+      if (px1_r >= 120 && px1_g <= 120 && px1_b <= 120) {
+        count_red++;
+      } else if (px1_r <= 120 && px1_g <= 120 && px1_b <= 120) {
         count++;
       }
-      if(pixels[i2*4] > 128) {
+      if (px2_r >= 120 && px2_g <= 120 && px2_b <= 120) {
+        count_red++;
+      } else if (px2_r <= 120 && px2_g <= 120 && px2_b <= 120) {
         count++;
       }
-      if(pixels[i3*4] > 128) {
+      if (px3_r >= 120 && px3_g <= 120 && px3_b <= 120 ) {
+        count_red++;
+      } else if (px3_r <= 120 && px3_g <= 120 && px3_b <= 120) {
         count++;
       }
-      if(pixels[i4*4] > 128) {
+      if (px4_r >= 120 && px4_g <= 120 && px4_b <= 120) {
+        // printf("r %d - g %d - b %d\n", px4_r, px4_g, px4_b);
+        count_red++;
+      } else if (px4_r <= 120 && px4_g <= 120 && px4_b <= 120) {
         count++;
       }
 
       if(count >= 2) {
         int *val = g_new(int, 1);
         *val = 0;
-        buf[c] = 0;
         g_ptr_array_add(px, val);
       } else {
         int *val = g_new(int, 1);
         *val = 1;
-        buf[c] = 1;
         g_ptr_array_add(px, val);
+      }
+
+      if(count_red >= 2) {
+        int *val = g_new(int, 1);
+        *val = 0;
+
+        g_ptr_array_add(px_red, val);
+      } else {
+        int *val = g_new(int, 1);
+        *val = 1;
+        g_ptr_array_add(px_red, val);
       }
       c++;
     }
   }
+
+  c = 0;
 
   gtk_widget_queue_draw(pop_up->app_obj->preview_draw_area);
 }
@@ -94,6 +132,12 @@ void on_add_text(GtkButton *button, gpointer user_data) {
   gtk_editable_set_text(GTK_EDITABLE(pop_up->app_obj->text_labels->entry), dset);
 
   g_list_store_append(pop_up->app_obj->text_store, new_obj);
+  guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(pop_up->app_obj->text_store)) - 1;
+
+  gtk_single_selection_set_selected(pop_up->app_obj->text_selection, last_item_index);
+
+  // 何も選択しない状態にする
+  // gtk_single_selection_set_selected(pop_up->app_obj->text_selection, GTK_INVALID_LIST_POSITION);
 
   gtk_stack_set_visible_child_name(GTK_STACK(pop_up->app_obj->stack), "text");
   g_ptr_array_add(pop_up->app_obj->text_objs, new_obj);
