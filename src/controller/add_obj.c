@@ -99,13 +99,13 @@ void on_scan_canvas(GtkButton *button, gpointer user_data){
       if(count_red >= 2) {
         int *val = g_new(int, 1);
         *val = 0;
-
         g_ptr_array_add(px_red, val);
       } else {
         int *val = g_new(int, 1);
         *val = 1;
         g_ptr_array_add(px_red, val);
       }
+      
       c++;
     }
   }
@@ -123,22 +123,21 @@ void on_add_text(GtkButton *button, gpointer user_data) {
   pop_up->app_obj->obj_mode = TEXT;
   pop_up->app_obj->obj_text = new_obj;
 
-  label_bind_double("x", pop_up->app_obj->text_labels->x, pop_up->app_obj->obj_text);
-  label_bind_double("y", pop_up->app_obj->text_labels->y, pop_up->app_obj->obj_text);
-  label_bind_double("font_size", pop_up->app_obj->text_labels->font_size, pop_up->app_obj->obj_text);
+  // label_bind_double("x", pop_up->app_obj->text_labels->x, pop_up->app_obj->obj_text);
+  // label_bind_double("y", pop_up->app_obj->text_labels->y, pop_up->app_obj->obj_text);
+  // label_bind_double("font_size", pop_up->app_obj->text_labels->font_size, pop_up->app_obj->obj_text);
 
-//同じ文字列をセットするとキャッシュされているため違う文字を代入　仮　GtkEntryBufferを使う？.　
-  gchar *dset = g_strdup_printf("%s%d", new_obj->text, pop_up->app_obj->text_objs->len);
-  gtk_editable_set_text(GTK_EDITABLE(pop_up->app_obj->text_labels->entry), dset);
+  //同じ文字列をセットするとキャッシュされているため違う文字を代入　仮　GtkEntryBufferを使う？.　
+  // gchar *dset = g_strdup_printf("%s%d", new_obj->text, pop_up->app_obj->text_objs->len);
+  // gtk_editable_set_text(GTK_EDITABLE(pop_up->app_obj->text_labels->entry), "");
+  // gtk_editable_set_text(GTK_EDITABLE(pop_up->app_obj->text_labels->entry), new_obj->text);
 
   g_list_store_append(pop_up->app_obj->text_store, new_obj);
   guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(pop_up->app_obj->text_store)) - 1;
-
   gtk_single_selection_set_selected(pop_up->app_obj->text_selection, last_item_index);
 
   // 何も選択しない状態にする
   // gtk_single_selection_set_selected(pop_up->app_obj->text_selection, GTK_INVALID_LIST_POSITION);
-
   gtk_stack_set_visible_child_name(GTK_STACK(pop_up->app_obj->stack), "text");
   g_ptr_array_add(pop_up->app_obj->text_objs, new_obj);
   gtk_widget_queue_draw(pop_up->app_obj->ope_draw_area);

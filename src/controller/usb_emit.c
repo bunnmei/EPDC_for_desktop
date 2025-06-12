@@ -128,8 +128,8 @@ static unsigned int emit_array_cretate(GPtrArray *pixels, unsigned char *emit_ar
   int count = 0;
   int index = 0;
   unsigned char byte = 0;
-  printf("max len %d\n", pixels->len);
   if (mode == BLACK) {
+
     for (int w = 0; w < size_w; w++)
     {
       for (int h = 0; h < size_h; h++){
@@ -139,17 +139,17 @@ static unsigned int emit_array_cretate(GPtrArray *pixels, unsigned char *emit_ar
         count++;
         if(count >= 8) {
           printf("byte %d\n", byte);
-          emit_arr[index] = byte;
+          emit_arr[index] = byte;  //BLACK､REDの違いここだけ
           index++;
           byte = 0;
           count = 0;
         }
       }
     }
-  } else if (mode == RED)
-  {
-    for (int w = 0; w < size_w; w++)
-    {
+
+  } else if (mode == RED) {
+
+    for (int w = 0; w < size_w; w++) {
       for (int h = 0; h < size_h; h++){
         int i = h * size_w + w;
         int *pixel = (int *)g_ptr_array_index(pixels, i);
@@ -157,49 +157,16 @@ static unsigned int emit_array_cretate(GPtrArray *pixels, unsigned char *emit_ar
         count++;
         if(count >= 8) {
           printf("byte %d\n", byte);
-          emit_arr[index] = ~byte;
+          emit_arr[index] = ~byte;  //BLACK､REDの違いここだけ
           index++;
           byte = 0;
           count = 0;
         }
       }
     }
+
   }
-
-  // g_print("index %d\n", emit_arr[index-1]);
-  // g_print("index %d\n", index);
-  // for (int i = 0; i < pixels->len; i++) {
-  //   unsigned char byte = 0;
-  //   int *pixel = (int *)g_ptr_array_index(pixels, i);
-  //   byte |= (*pixel << i);
-  //   int p = size
-  // }
-  // for (int w = 0; w < size_w; w++){
-  //   unsigned char byte = 0;
-  //   for (int h = 0; h < size_h; h++){
-
-  //       for (int i = 0; i < 8; i++) {
-
-  //         int *pixel = (int *)g_ptr_array_index(pixels, count);
-  //         byte |= (*pixel << i);
-  //         count++;
-  //       }
-  //       // emit_arr[h*size_w + w] = ~byte;
-  //       g_print("index %d\n",(w*size_h));
-  //   }
-  // }
-
   return count;
-  // for (unsigned int i = 0; i < pixels->len; i += 8)
-  // {
-  //   unsigned char byte = 0;
-  //   for (int j = 0; j < 8; ++j)
-  //   {
-  //     int *pixel = (int *)g_ptr_array_index(pixels, i + j);
-  //     byte |= (*pixel << j); // 下位から上位へ
-  //   }
-  //   emit_arr[emit_arr_idx++] = byte;
-  // }
 }
 
 static gpointer usb_emit_thread(gpointer data) {

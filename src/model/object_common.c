@@ -6,7 +6,7 @@ EPDC_App_Obj *app_obj_init() {
   app_obj->text_objs = g_ptr_array_new_full(
     0, // 初期サイズ
     (GDestroyNotify)g_object_unref // ここを g_object_unref に変更
-);
+  );
   app_obj->ope_draw_area = NULL;
   app_obj->preview_draw_area = NULL;
   app_obj->stack = NULL;

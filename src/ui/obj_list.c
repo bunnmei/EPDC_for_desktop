@@ -6,27 +6,36 @@ void on_button_clicked(GtkButton *button, gpointer user_data)
   GtkListItem *list_item = g_object_get_data(G_OBJECT(button), "list-item");
   GObject *model_item = gtk_list_item_get_item(list_item);
   TextObject *rm_obj = TEXT_OBJECT(model_item);
-  if(g_strcmp0(rm_obj->uuid, app_obj->obj_text->uuid) == 0) {
-    app_obj->obj_text = NULL;
-    app_obj->obj_mode = NONE;
-    gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
-  }
+  // if(g_strcmp0(rm_obj->uuid, app_obj->obj_text->uuid) == 0) {
+  //   app_obj->obj_text = NULL;
+  //   app_obj->obj_mode = NONE;
+  //   gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
+  // }
+
   if (TEXT_IS_OBJECT(model_item)){
     g_print("TextObjectです\n");
+    g_print("rm_obj %s\n", rm_obj->text);
   }
+
   if (list_item)
   {
     // app_obj->obj_text = NULL;
+    // gtk_single_selection_set_selected(app_obj->text_selection, GTK_INVALID_LIST_POSITION);
+    printf("ppp %p\n", list_item);
     guint position = gtk_list_item_get_position(list_item);
+    printf("position %d\n", position);
     g_list_store_remove(app_obj->text_store, position);
-    gpointer ptr = g_ptr_array_remove_index(app_obj->text_objs, position);
-    if (ptr) {
-      g_print("Successfully removed from GPtrArray.\n");
-  } else {
-      g_print("Warning: Object not found in GPtrArray.\n");
-  }
+    gboolean result = g_ptr_array_remove(app_obj->text_objs, rm_obj);
     gtk_widget_queue_draw(app_obj->ope_draw_area);
-    g_print("Button clicked at position: %u\n", position);
+    // gpointer ptr = g_ptr_array_remove_index(app_obj->text_objs, position);
+    // printf("rm position %d\n", position);
+    // g_list_store_remove(app_obj->text_store, position);
+    // if (result) {
+    //   g_print("Successfully removed from GPtrArray.\n");
+    // } else {
+    //   g_print("Warning: Object not found in GPtrArray.\n");
+    // }
+    // g_print("Button clicked at position: %u\n", position);
   }
 }
 
@@ -45,7 +54,12 @@ static void setup_list_item(GtkListItemFactory *factory, GtkListItem *list_item,
 }
 
 static void bind_list_item(GtkListItemFactory *factory, GtkListItem *list_item, gpointer user_data){
-  TextObject *item_data = TEXT_OBJECT(gtk_list_item_get_item(list_item));
+  printf("bild_list_item\n");
+  gpointer obj_ptr = gtk_list_item_get_item(list_item);
+  if(obj_ptr == NULL) {
+    printf("bind_list_obj_ptr is NULL");
+  }
+  TextObject *item_data = TEXT_OBJECT(obj_ptr);
   GtkWidget *box = gtk_list_item_get_child(list_item);
   GtkWidget *label = gtk_widget_get_first_child(box);
   // GtkWidget *label = gtk_list_item_get_child(list_item);
@@ -58,19 +72,30 @@ static void on_item_selected(GtkSingleSelection *selection, GParamSpec *pspec, g
 {
   // g_print("clickされたよ");
   EPDC_App_Obj *app_obj = (EPDC_App_Obj *)user_data;
+  
+  // if(item_data) {
+    //   printf("null TextObject\n");
+    // }
+  guint selected_index = gtk_single_selection_get_selected(selection);
   gpointer selected_item = gtk_single_selection_get_selected_item(selection);
   TextObject *item_data = TEXT_OBJECT(selected_item);
-
-  guint selected_index = gtk_single_selection_get_selected(selection);
-  g_print("n番目 %d\n", selected_index);
-
-  // if (selected_item) {
-  //   // Cast the selected item to TextObject*
-
-  //   // Now you can access the data within item_data, for example:
-  //   g_print("Selected item text: %s\n", item_data->uuid); // Assuming you have a getter for the text property
+  g_print("on_item_selected - n番目 %d\n", selected_index);
+  // if(item_data == NULL) {
+  //   printf("TextObject is NULL\n");
   // }
-
+  // item_data != NULLはlistの要素削除ににも"bind"のコールバック関数が呼ばれるため
+  if(selected_index >= 0 && item_data != NULL) {
+    app_obj->obj_mode = TEXT;
+    app_obj->obj_text = item_data;
+  
+    label_bind_double("x", app_obj->text_labels->x, app_obj->obj_text);
+    label_bind_double("y", app_obj->text_labels->y, app_obj->obj_text);
+    label_bind_double("font_size", app_obj->text_labels->font_size,app_obj->obj_text);
+  
+    GtkEntry *entry = GTK_ENTRY(app_obj->text_labels->entry);
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);
+    gtk_entry_buffer_set_text(buffer, app_obj->obj_text->text, -1);
+  }
 
 }
 
@@ -80,7 +105,7 @@ GtkWidget *create_obj_list_box(EPDC_App_Obj *app_obj){
   app_obj->text_store = store;
 
   GtkSingleSelection *selection = gtk_single_selection_new(G_LIST_MODEL(store));
-  g_signal_connect(selection, "notify::selected", G_CALLBACK(on_item_selected), NULL);
+  g_signal_connect(selection, "notify::selected", G_CALLBACK(on_item_selected), app_obj);
   app_obj->text_selection = selection;
 
   GtkListItemFactory *factory = gtk_signal_list_item_factory_new();
