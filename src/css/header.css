@@ -133,3 +133,51 @@ notebook > header{
 notebook > header tabs tab:checked {
   background-color: #d9e4ff;
 }
+/* obj_list.h */
+listview row {
+  border: none;
+  border-left: solid 10px rgba(0, 0, 0, 0);
+}
+listview row:selected {
+  background-color: #ffffff;
+  border-left: solid 10px #d9e4ff;
+  color: rgb(0, 0, 0);
+}
+
+listview row:active {
+  box-shadow: none;
+  background-color: #ffffff;
+  /* border-left: solid 5px rgb(65, 37, 41); */
+  border: none;
+  border-left: solid 10px #d9e4ff;
+  color: rgb(0, 0, 0);
+}
+.list-box {
+  min-height: 50px;
+  min-width: 50px;
+  background-image: none;
+}
+
+
+.list-label {
+  margin-left: 16px;
+}
+
+.list-btn {
+  /* margin-left: auto; */
+  background-image: none;
+  background-color: #b3c7f7;
+  /* background-color: #5474c5; */
+  padding: 0;
+  margin: 0;
+  border: none;
+  /* margin: 16px 16px 0px 0px; */
+  border-radius: 50%;
+  min-width: 40px;
+  min-height: 40px;
+  margin-left: 16px;
+}
+
+.list-btn:hover {
+  background-color: #d9e4ff;
+}
