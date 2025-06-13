@@ -92,6 +92,7 @@ static void bind_list_item(GtkListItemFactory *factory, GtkListItem *list_item, 
   gtk_expression_bind(ex, label, "label", item_data);
 }
 
+
 static void on_item_selected(GtkSingleSelection *selection, GParamSpec *pspec, gpointer user_data)
 {
   EPDC_App_Obj *app_obj = (EPDC_App_Obj *)user_data;
@@ -114,6 +115,8 @@ static void on_item_selected(GtkSingleSelection *selection, GParamSpec *pspec, g
     label_bind_double("x", app_obj->text_labels->x, app_obj->obj_text);
     label_bind_double("y", app_obj->text_labels->y, app_obj->obj_text);
     label_bind_double("font_size", app_obj->text_labels->font_size,app_obj->obj_text);
+
+    gtk_drop_down_set_selected(GTK_DROP_DOWN(app_obj->select_color), app_obj->obj_text->color);
   
     GtkEntry *entry = GTK_ENTRY(app_obj->text_labels->entry);
     GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);

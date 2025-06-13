@@ -13,6 +13,7 @@ typedef struct
   TextObject *obj_text;
   TextLabels *text_labels;
   GListStore *text_store;
+  GtkWidget *select_color;
   GtkSingleSelection *text_selection;
 } EPDC_App_Obj;
 

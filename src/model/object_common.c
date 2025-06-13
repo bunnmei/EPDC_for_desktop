@@ -14,6 +14,7 @@ EPDC_App_Obj *app_obj_init() {
   app_obj->obj_text = NULL;
   app_obj->text_store = NULL;
   app_obj->text_selection = NULL;
+  app_obj->select_color = NULL;
 
   TextLabels *text_labels = g_new0(TextLabels, 1);
   text_labels->x = NULL;

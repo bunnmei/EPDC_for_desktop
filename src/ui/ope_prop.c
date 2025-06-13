@@ -55,7 +55,7 @@ void on_entry_changed(GtkEntry *entry, gpointer user_data) {
 GtkWidget *create_text_prop_box(EPDC_App_Obj *app_obj){
   GtkWidget *text_prop_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
   GtkWidget *x = create_prop("x", app_obj);
-  GtkWidget *btn_x = gtk_widget_get_first_child(x); //子要素の取得キモイ
+  GtkWidget *btn_x = gtk_widget_get_first_child(x); // 子要素の取得キモイ
   GtkWidget *label_x = gtk_widget_get_next_sibling(btn_x);
   app_obj->text_labels->x = label_x;
   
@@ -70,35 +70,58 @@ GtkWidget *create_text_prop_box(EPDC_App_Obj *app_obj){
   app_obj->text_labels->font_size = label_font_size;
 
   //color drop_down_menu
+  GtkWidget *drop_down_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_widget_add_css_class(drop_down_box, "drop-down-box");
+  GtkWidget *color_label = gtk_label_new("Color: ");
+  gtk_widget_add_css_class(color_label, "prop-label");
+  gtk_label_set_xalign(GTK_LABEL(color_label), 0.1); 
   const char *options[] = {"BLACK", "RED", NULL};
   GtkStringList *string_list = gtk_string_list_new(options);
   GtkWidget *drop_down = gtk_drop_down_new(G_LIST_MODEL(string_list), NULL);
+  app_obj->select_color = drop_down;
+  gtk_widget_set_hexpand(drop_down, TRUE);
+  gtk_drop_down_set_selected(GTK_DROP_DOWN(drop_down), 0);
   g_signal_connect(drop_down, "notify::selected-item", G_CALLBACK(on_dropdown_changed), app_obj);
+  gtk_box_append(GTK_BOX(drop_down_box), color_label);
+  gtk_box_append(GTK_BOX(drop_down_box), drop_down);
+
+  GtkWidget *entry_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_widget_add_css_class(entry_box, "entry-box");
+  GtkWidget *entry_label = gtk_label_new("Text: ");
+  gtk_widget_add_css_class(entry_label, "prop-label");
+  gtk_label_set_xalign(GTK_LABEL(entry_label), 0.1); // 左寄せ
 
   GtkWidget *entry = gtk_entry_new();
+  gtk_widget_set_hexpand(entry, TRUE);
   app_obj->text_labels->entry = entry;
   g_signal_connect(entry, "changed", G_CALLBACK(on_entry_changed), app_obj);
-
+  gtk_box_append(GTK_BOX(entry_box), entry_label);
+  gtk_box_append(GTK_BOX(entry_box), entry);
 
   gtk_box_append(GTK_BOX(text_prop_box), x);
   gtk_box_append(GTK_BOX(text_prop_box), y);
   gtk_box_append(GTK_BOX(text_prop_box), font_size);
-  gtk_box_append(GTK_BOX(text_prop_box), drop_down);
-  gtk_box_append(GTK_BOX(text_prop_box), entry);
+  gtk_box_append(GTK_BOX(text_prop_box), drop_down_box);
+  gtk_box_append(GTK_BOX(text_prop_box), entry_box);
   return text_prop_box;
 }
 
 GtkWidget *create_prop(char *id, EPDC_App_Obj *app_obj){
   char id_name[32];
   GtkWidget *prop_box_h = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_widget_add_css_class(prop_box_h, "prop_box");
+  gtk_widget_add_css_class(prop_box_h, "prop-box");
   gtk_widget_set_valign(prop_box_h, GTK_ALIGN_START);
   
   snprintf(id_name, sizeof(id_name), "prop_text_%s_btn_minus", id);
   GtkWidget *prop_btn_minus = gtk_button_new();
   gtk_widget_set_name(prop_btn_minus, id_name);
-  gtk_widget_add_css_class(prop_btn_minus, "prop_btn");
+  gtk_widget_add_css_class(prop_btn_minus, "prop-btn");
   gtk_widget_set_valign(prop_btn_minus, GTK_ALIGN_CENTER);
+
+  GtkWidget *minus_img = gtk_image_new_from_file("src/icons/remove.svg");
+  gtk_widget_set_size_request(minus_img, 24, 24);
+  gtk_widget_set_valign(minus_img, GTK_ALIGN_CENTER);
+  gtk_button_set_child(GTK_BUTTON(prop_btn_minus), minus_img);
 
   snprintf(id_name, sizeof(id_name), "prop_text_%s_label", id);
   GtkWidget *prop_label = gtk_label_new("");
@@ -109,7 +132,12 @@ GtkWidget *create_prop(char *id, EPDC_App_Obj *app_obj){
   GtkWidget *prop_btn_plus = gtk_button_new();
   gtk_widget_set_name(prop_btn_plus, id_name);
   gtk_widget_set_valign(prop_btn_plus, GTK_ALIGN_CENTER);
-  gtk_widget_add_css_class(prop_btn_plus, "prop_btn");
+  gtk_widget_add_css_class(prop_btn_plus, "prop-btn");
+
+  GtkWidget *plus_img = gtk_image_new_from_file("src/icons/add.svg");
+  gtk_widget_set_size_request(plus_img, 24, 24);
+  gtk_widget_set_valign(plus_img, GTK_ALIGN_CENTER);
+  gtk_button_set_child(GTK_BUTTON(prop_btn_plus), plus_img);
 
   g_signal_connect(prop_btn_minus, "clicked", G_CALLBACK(on_prop), app_obj);
   g_signal_connect(prop_btn_plus, "clicked", G_CALLBACK(on_prop), app_obj);

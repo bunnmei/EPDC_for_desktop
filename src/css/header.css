@@ -175,9 +175,39 @@ listview row:active {
   border-radius: 50%;
   min-width: 40px;
   min-height: 40px;
-  margin-left: 16px;
+  margin-right: 5px;
 }
 
 .list-btn:hover {
   background-color: #d9e4ff;
+}
+
+/* sideprop */
+
+.prop-box {
+  min-height: 50px;
+}
+
+.prop-btn{
+  background-image: none;
+  background-color: #b3c7f7;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  min-width: 40px;
+  min-height: 40px;
+  margin: 5px;
+}
+
+.drop-down-box{
+  padding: 5px;
+}
+
+.entry-box {
+  padding: 5px;
+}
+
+.prop-label {
+  min-width: 100px;
 }
