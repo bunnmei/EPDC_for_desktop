@@ -111,9 +111,13 @@ GtkWidget *create_pop_up_layer(PopUp *pop_up) {
   gtk_widget_set_size_request(add_obj_list_box, 300, 400);
   gtk_widget_set_visible(add_obj_list_box, FALSE);
   pop_up->pop_up_box = add_obj_list_box;
-  GtkWidget *add_text_btn = gtk_button_new();
+  GtkWidget *add_text_btn = gtk_button_new_with_label("Text");
   gtk_box_append(GTK_BOX(add_obj_list_box), add_text_btn);
   g_signal_connect(add_text_btn, "clicked", G_CALLBACK(on_add_text), pop_up);
+
+  GtkWidget *add_rect_btn = gtk_button_new_with_label("Rect");
+  gtk_box_append(GTK_BOX(add_obj_list_box), add_rect_btn);
+  g_signal_connect(add_rect_btn, "clicked", G_CALLBACK(on_add_rect), pop_up);
 
   return add_obj_list_box;
 }

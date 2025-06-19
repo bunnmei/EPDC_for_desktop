@@ -21,7 +21,9 @@ sourcefiles=files(
   'src/controller/usb_emit.c',
 
   'src/model/text_object.c',
+  'src/model/rect_object.c',
   'src/model/object_common.c',
+  'src/model/top_common.c',
   'src/model/usb_emit_test_data.c'
   )
 

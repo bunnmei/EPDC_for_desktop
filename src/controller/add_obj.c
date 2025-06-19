@@ -134,12 +134,34 @@ void on_add_text(GtkButton *button, gpointer user_data) {
 
   g_list_store_append(pop_up->app_obj->text_store, new_obj);
   guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(pop_up->app_obj->text_store)) - 1;
+  gtk_single_selection_set_selected(pop_up->app_obj->rect_selection, GTK_INVALID_LIST_POSITION);
   gtk_single_selection_set_selected(pop_up->app_obj->text_selection, last_item_index);
 
   // 何も選択しない状態にする
   // gtk_single_selection_set_selected(pop_up->app_obj->text_selection, GTK_INVALID_LIST_POSITION);
   gtk_stack_set_visible_child_name(GTK_STACK(pop_up->app_obj->stack), "text");
   g_ptr_array_add(pop_up->app_obj->text_objs, new_obj);
+  gtk_widget_queue_draw(pop_up->app_obj->ope_draw_area);
+}
+
+
+void on_add_rect(GtkButton *button, gpointer user_data) {
+  PopUp *pop_up = (PopUp *)user_data;
+
+  gtk_widget_set_visible(pop_up->mask, FALSE);
+  gtk_widget_set_visible(pop_up->pop_up_box, FALSE);
+
+  RectObject *new_obj = rect_object_new(g_uuid_string_random(), 50.0, 150.0, 100.0, 100.0, 0.0, BLACK);
+  pop_up->app_obj->obj_mode = RECT_OBJMode;
+  pop_up->app_obj->obj_rect = new_obj;
+
+  g_list_store_append(pop_up->app_obj->rect_store, new_obj);
+  guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(pop_up->app_obj->rect_store)) - 1;
+  gtk_single_selection_set_selected(pop_up->app_obj->text_selection, GTK_INVALID_LIST_POSITION);
+  gtk_single_selection_set_selected(pop_up->app_obj->rect_selection, last_item_index);
+
+  gtk_stack_set_visible_child_name(GTK_STACK(pop_up->app_obj->stack), "rect");
+  g_ptr_array_add(pop_up->app_obj->rect_objs, new_obj);
   gtk_widget_queue_draw(pop_up->app_obj->ope_draw_area);
 }
 

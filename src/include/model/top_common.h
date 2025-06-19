@@ -12,6 +12,9 @@ typedef enum
 typedef enum
 {
   TEXT,
-  RECT,
+  RECT_OBJMode,
   NONE,
 } ObjMode;
+
+GType color_mode_get_type(void);
+#define COLOR_MODE_TYPE (color_mode_get_type())

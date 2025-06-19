@@ -7,8 +7,6 @@
 #define TEXT_TYPE_OBJECT (text_object_get_type())
 G_DECLARE_FINAL_TYPE(TextObject, text_object, TEXT, OBJECT, GObject);
 
-GType color_mode_get_type(void);
-#define COLOR_MODE_TYPE (color_mode_get_type())
 
 struct _TextObject {
     GObject parent_instance;
