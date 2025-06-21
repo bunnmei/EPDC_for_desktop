@@ -54,7 +54,7 @@ static void rect_object_get_property(GObject *object, guint prop_id, GValue *val
 static void rect_object_finalize(GObject *object) {
   RectObject *self = RECT_OBJMode_OBJECT(object);
   g_free(self->uuid);
-  G_OBJECT_CLASS(rect_object_finalize)->finalize(object);
+  G_OBJECT_CLASS(rect_object_parent_class)->finalize(object);
 }
 
 static void rect_object_class_init(RectObjectClass *klass) {

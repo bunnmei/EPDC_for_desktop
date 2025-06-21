@@ -52,7 +52,7 @@ headerbar box {
 
 /* main_content.c  */
 .left-box {
-  background-color: rgb(252, 255, 177);
+  background-color: #eaf0ff;
   border: none;
   padding: 0px;
 }

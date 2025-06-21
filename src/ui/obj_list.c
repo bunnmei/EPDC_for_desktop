@@ -5,36 +5,64 @@ void on_button_clicked(GtkButton *button, gpointer user_data)
   EPDC_App_Obj *app_obj = (EPDC_App_Obj *)user_data;
   GtkListItem *list_item = g_object_get_data(G_OBJECT(button), "list-item");
   GObject *model_item = gtk_list_item_get_item(list_item);
-  TextObject *rm_obj = TEXT_OBJECT(model_item);
-  
-  if (TEXT_IS_OBJECT(model_item)){
-    g_print("TextObjectです\n");
-    g_print("rm_obj %s\n", rm_obj->text);
+  if(G_TYPE_CHECK_INSTANCE_TYPE(model_item, TEXT_TYPE_OBJECT)){
+    printf("Text OBJ\n");
+    TextObject *rm_obj = TEXT_OBJECT(model_item);
+    if (list_item) {
+      guint position = gtk_list_item_get_position(list_item);
+      g_list_store_remove(app_obj->text_store, position);
+      gboolean result = g_ptr_array_remove(app_obj->text_objs, rm_obj);
+      gtk_widget_queue_draw(app_obj->ope_draw_area);
+
+      if(g_strcmp0(rm_obj->uuid, app_obj->obj_text->uuid) == 0) {
+        app_obj->obj_text = NULL;
+        app_obj->obj_mode = NONE;
+        gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
+
+        guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(app_obj->text_store)) - 1;
+        if(last_item_index >= 0) {
+          gtk_single_selection_set_selected(app_obj->text_selection, last_item_index);
+        }
+      }
+    }
+  } else if (G_TYPE_CHECK_INSTANCE_TYPE(model_item, RECT_TYPE_OBJECT)){
+    printf("Rect OBJ\n");
+    RectObject *rm_obj = RECT_OBJMode_OBJECT(model_item);
+    if (list_item) {
+      printf("check type rect %d\n", RECT_OBJMode_IS_OBJECT(rm_obj));
+      guint position = gtk_list_item_get_position(list_item);
+      g_list_store_remove(app_obj->rect_store, position);
+      for (guint i = 0; i < app_obj->rect_objs->len; i++) {
+          g_print("ptr[%u] = %p, rm_obj = %p\n", i, g_ptr_array_index(app_obj->rect_objs, i), rm_obj);
+      }
+      gboolean result = g_ptr_array_remove(app_obj->rect_objs, rm_obj);
+      gtk_widget_queue_draw(app_obj->ope_draw_area);
+
+      if(g_strcmp0(rm_obj->uuid, app_obj->obj_rect->uuid) == 0) {
+        app_obj->obj_rect = NULL;
+        app_obj->obj_mode = NONE;
+        gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
+
+        guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(app_obj->rect_store)) - 1;
+        if(last_item_index >= 0) {
+          gtk_single_selection_set_selected(app_obj->rect_selection, last_item_index);
+        }
+      }
+    }
   }
+  // TextObject *rm_obj = TEXT_OBJECT(model_item);
+  
+  // if (TEXT_IS_OBJECT(model_item)){
+  //   g_print("TextObjectです\n");
+  //   g_print("rm_obj %s\n", rm_obj->text);
+  // }
 
 //   if (G_TYPE_CHECK_INSTANCE_TYPE(model_item, TEXT_TYPE_OBJECT)) {
 //     TextObject *text_obj = TEXT_OBJECT(model_item);
 //     // 安全に TextObject として使える
 // }
-  if (list_item)
-  {
-    printf("ppp %p\n", list_item);
-    guint position = gtk_list_item_get_position(list_item);
-    printf("position %d\n", position);
-    g_list_store_remove(app_obj->text_store, position);
-    gboolean result = g_ptr_array_remove(app_obj->text_objs, rm_obj);
-    gtk_widget_queue_draw(app_obj->ope_draw_area);
-
-    if(g_strcmp0(rm_obj->uuid, app_obj->obj_text->uuid) == 0) {
-      app_obj->obj_text = NULL;
-      app_obj->obj_mode = NONE;
-      gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
-
-      guint last_item_index = g_list_model_get_n_items(G_LIST_MODEL(app_obj->text_store)) - 1;
-      if(last_item_index >= 0) {
-        gtk_single_selection_set_selected(app_obj->text_selection, last_item_index);
-      }
-    }
+ // text remove
+  
     // gtk_stack_set_visible_child_name(GTK_STACK(app_obj->stack), "none");
     // gtk_single_selection_set_selected(app_obj->text_selection, GTK_INVALID_LIST_POSITION);
 
@@ -47,7 +75,7 @@ void on_button_clicked(GtkButton *button, gpointer user_data)
     //   g_print("Warning: Object not found in GPtrArray.\n");
     // }
     // g_print("Button clicked at position: %u\n", position);
-  }
+  // }
 }
 void on_clicked_text_item(
   GtkGestureClick *gesture,

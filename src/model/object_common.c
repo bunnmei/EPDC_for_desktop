@@ -8,8 +8,9 @@ EPDC_App_Obj *app_obj_init() {
     (GDestroyNotify)g_object_unref // ここを g_object_unref に変更
   );
   app_obj->rect_objs = g_ptr_array_new_full(
-      0,
-      (GDestroyNotify)g_object_unref);
+    0,
+    (GDestroyNotify)g_object_unref
+  );
   app_obj->ope_draw_area = NULL;
   app_obj->preview_draw_area = NULL;
   app_obj->stack = NULL;
